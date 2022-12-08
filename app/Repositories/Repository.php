@@ -34,9 +34,4 @@ class Repository
 
         return $model;
     }
-
-    public function find($id)
-    {
-        return $this->model->find($id);
-    }
 }
