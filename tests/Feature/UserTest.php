@@ -42,6 +42,25 @@ class UserTest extends TestCase
         $this->assertEquals('testname@email.com', $oneUser->email);
     }
 
+    public function test_one_user_can_be_show()
+    {
+        $this->withoutExceptionHandling();
+
+        User::create([
+            'name' => 'TestName',
+            'email' => 'testname@email.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $user = User::first();
+
+        $response = $this->get(route('users.show', $user->id));
+
+        $response->assertOk();
+        $this->assertEquals('TestName', $user->name);
+        $this->assertEquals('testname@email.com', $user->email);
+    }
+
     public function test_user_can_be_updated()
     {
         $this->withoutExceptionHandling();
