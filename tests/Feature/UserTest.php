@@ -42,7 +42,57 @@ class UserTest extends TestCase
         $this->assertEquals('testname@email.com', $oneUser->email);
     }
 
-    public function test_one_user_can_be_show()
+    public function test_name_validated()
+    {
+        $response = $this->post(route('users.store'), [
+            'name' => '',
+            'email' => 'testname@email.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $response->assertSessionHasErrors('name');
+    }
+
+    public function test_email_validated()
+    {
+        $response = $this->post(route('users.store'), [
+            'name' => 'TestName',
+            'email' => '',
+            'password' => Hash::make('password'),
+        ]);
+
+        $response->assertSessionHasErrors('email');
+    }
+    
+    public function test_email_duplicated()
+    {
+        User::create([
+            'name' => 'TestName',
+            'email' => 'testname@email.com',
+            'password' => Hash::make('password'),
+        ]);
+        
+        $response = $this->post(route('users.store'), [
+            'name' => 'TestName',
+            'email' => 'testname@email.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $response->assertSessionHasErrors('email');
+    }
+
+    public function test_password_validated()
+    {
+        $response = $this->post(route('users.store'), [
+            'name' => 'TestName',
+            'email' => 'testname@email.com',
+            'password' => '',
+        ]);
+
+        $response->assertSessionHasErrors('password');
+    }
+
+    public function test_user_can_be_show()
     {
         $this->withoutExceptionHandling();
 
