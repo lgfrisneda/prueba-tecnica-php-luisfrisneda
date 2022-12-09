@@ -81,6 +81,26 @@ class UserTest extends TestCase
         $response->assertSessionHasErrors('email');
     }
 
+    public function test_email_duplicated_to_update()
+    {
+        User::factory(1)->create();
+        $user = User::first();
+
+        User::create([
+            'name' => 'TestName',
+            'email' => 'testname@email.com',
+            'password' => Hash::make('password'),
+        ]);
+        
+        $response = $this->put(route('users.update', $user->id), [
+            'name' => 'TestName',
+            'email' => 'testname@email.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $response->assertSessionHasErrors('email');
+    }
+
     public function test_password_validated()
     {
         $response = $this->post(route('users.store'), [
