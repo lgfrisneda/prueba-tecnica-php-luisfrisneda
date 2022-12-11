@@ -23,10 +23,17 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'required',
-            'email' => "required|unique:users,email,$this->id,id",
-            'password' => 'required'
+            'email' => 'required|email|unique:users,email,'.$this->user->id,
         ];
+
+        if($this->get('password')){
+            $rules = array_merge($rules, [
+                'password' => 'min:8'
+            ]);
+        }
+
+        return $rules;
     }
 }

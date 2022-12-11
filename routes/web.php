@@ -15,7 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('users.index');
 });
 
 Route::resource('/users', UserController::class)->names('users');
+
+Auth::routes(["register" => false, "login" => false]);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

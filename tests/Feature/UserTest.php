@@ -35,7 +35,7 @@ class UserTest extends TestCase
 
         $allUsers = User::all();
         $oneUser = $allUsers->last();
-        $response->assertOk();
+        $response->assertSessionHasNoErrors();
         
         $this->assertCount(1, $allUsers);
         $this->assertEquals('TestName', $oneUser->name);
@@ -145,7 +145,7 @@ class UserTest extends TestCase
             'password' => Hash::make('passwordEdited'),
         ]);
 
-        $response->assertOk();
+        $response->assertSessionHasNoErrors();
         $user = $user->fresh();
 
         $this->assertEquals('TestNameEdited', $user->name);
@@ -162,7 +162,6 @@ class UserTest extends TestCase
         $response = $this->delete(route('users.destroy', $user->id));
 
         $users = User::all();
-        $response->assertOk();
         
         $this->assertCount(0, $users);
     }
